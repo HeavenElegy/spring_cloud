@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<meta charset="UTF-8">
+		<title>Title</title>
+	</head>
+	<body>
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			拥有<span style="color: red;">ADMIN</span>权限
+		</div>
+	</body>
+</html>

@@ -1,0 +1,7 @@
+server:
+  port: 9910
+  servlet:
+    context-path: /authorization
+logging:
+  level:
+    root: debug

@@ -1,0 +1,14 @@
+logging:
+  level:
+    root: debug
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: github-client-id
+            client-secret: github-client-secret
+          facebook:
+            client-id: 2053264478123596
+            client-secret: 319fd94c0bc9885f5511627da56ae536

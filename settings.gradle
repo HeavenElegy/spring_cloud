@@ -1,0 +1,4 @@
+rootProject.name = 'spring_cloud'
+
+include 'discovery'
+include 'security'

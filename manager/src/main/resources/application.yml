@@ -1,0 +1,41 @@
+---
+server:
+  port: 9930
+  servlet:
+    context-path: /manager
+---
+---
+security:
+  oauth2:
+    resource:
+      id: manager
+      token-type: OAuth2
+      user-info-uri: /userInfo
+...
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.104.72.222:3306/test2.0_0809?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: xpsd@123456789
+...
+---
+spring:
+  thymeleaf:
+    cache: false
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
+...
+---
+logging:
+  level:
+    root: debug
+...
