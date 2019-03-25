@@ -5,3 +5,6 @@ server:
 logging:
   level:
     root: debug
+spring:
+  application:
+    name: authorization

@@ -1,17 +1,10 @@
 ---
-server:
-  port: 9930
-  servlet:
-    context-path: /manager
----
----
 security:
   oauth2:
     resource:
       id: manager
       token-type: OAuth2
       user-info-uri: /userInfo
-...
 ---
 spring:
   datasource:
@@ -38,4 +31,25 @@ spring:
 logging:
   level:
     root: debug
+...
+
+---
+server:
+  port: 9930
+  servlet:
+    context-path: /manager
+spring:
+  application:
+    name: manager
+...
+
+---
+eureka:
+  client:
+    service-url:
+      # 注册中心地址
+      default-zone: http://localhost:8761/eureka
+#  instance:
+#    # 设置实例名
+#    instance-id: ${spring.application.name}:${server.port}
 ...

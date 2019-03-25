@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <a href="http://localhost:9910/authorization/oauth/authorize?response_type=code&client_id=client_id&client_secret=666&scopes=test">获取授权</a>
-</body>
+<html lang="zh"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>授权页面</title>
+	</head>
+	<body>
+		<div th:if="${userInfo != null}">
+			<p th:text="${'你好:' + userInfo.user_name}"></p><span>(姓名来自资源服务器的userInfo接口)</span>
+		</div>
+		<div th:if="${userInfo == null}">
+			<a href="http://localhost:9910/authorization/oauth/authorize?response_type=code&client_id=client_id&redirect_uri=http://localhost:9930/manager/example/authorization/code">点击授权</a>
+		</div>
+	</body>
 </html>

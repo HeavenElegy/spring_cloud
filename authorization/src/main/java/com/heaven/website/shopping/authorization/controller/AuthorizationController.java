@@ -4,8 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.security.Principal;
-
 /**
  * @author xiaoxi.li
  * @date 2019/03/22 14:47
@@ -16,16 +14,11 @@ public class AuthorizationController {
 
 
 
-	@RequestMapping("/test")
+	@RequestMapping("/")
 	@ResponseBody
 	public Object getAccessToken() {
 		return "ok";
 	}
 
-	@RequestMapping("/userInfo")
-	@ResponseBody
-	public Object userInfo(Principal principal) {
-		return principal;
-	}
 
 }

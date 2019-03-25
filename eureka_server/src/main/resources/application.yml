@@ -1,0 +1,11 @@
+server:
+  port: 8761
+eureka:
+  client:
+    # 单服务下，停止对eureka注册
+    register-with-eureka: false
+    # 单服务下，停止拉去注册信息
+    fetch-registry: false
+spring:
+  application:
+    name: discovery

@@ -26,14 +26,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.authorizeRequests()
-				.anyRequest().authenticated()
-			.and()
-				.httpBasic()
-			.and()
-				.formLogin()
-			.and()
-				.csrf().disable()
-			.userDetailsService(exampleUserDetailsService);
+				.authorizeRequests()
+					.anyRequest().authenticated()
+				.and()
+					.httpBasic()
+				.and()
+					.csrf()
+				.and()
+					.formLogin()
+				.and()
+					.userDetailsService(exampleUserDetailsService);
 	}
 }

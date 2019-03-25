@@ -1,5 +1,7 @@
 package com.heaven.website.shopping.resource.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,8 +14,9 @@ import java.security.Principal;
  * @description
  */
 @Controller
-@RequestMapping("/example")
 public class ExampleController {
+
+	public final Logger log = LoggerFactory.getLogger(getClass());
 
 	@RequestMapping("/test")
 	@ResponseBody
@@ -21,10 +24,13 @@ public class ExampleController {
 		return "ok";
 	}
 
-
 	@RequestMapping("/userInfo")
 	@ResponseBody
 	public Object userInfo(Principal principal) {
+
+		log.debug(principal.toString());
+
+
 		return principal;
 	}
 }

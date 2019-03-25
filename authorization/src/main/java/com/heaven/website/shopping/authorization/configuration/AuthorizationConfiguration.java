@@ -16,13 +16,6 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import javax.sql.DataSource;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.logging.Logger;
-
 /**
  * 授权服务器配置
  *
@@ -39,19 +32,19 @@ public class AuthorizationConfiguration extends AuthorizationServerConfigurerAda
 		clients.inMemory()
 				.withClient("client_id")
 				.secret("666")
-				.autoApprove(true)
+				.autoApprove(false)
 				.authorizedGrantTypes("authorization_code")
 				.scopes("test")
 				.authorities("abc")
-				.redirectUris("http://localhost:9930/manager/example/authorizationSuccess");
+				.redirectUris("http://localhost:9930/manager/example/authorization/code");
 	}
 
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		security
-				.allowFormAuthenticationForClients()
-				.checkTokenAccess("permitAll()");
+
+		// 开启资源服务器的token验证功能
+		security.checkTokenAccess("permitAll()");
 	}
 
 	@Override

@@ -2,11 +2,18 @@ package com.heaven.website.shopping.manager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 
 /**
  * @author li.xiaoxi
  */
+@EnableFeignClients
+@EnableDiscoveryClient
 @SpringBootApplication
 public class ManagerApplication {
 
@@ -15,4 +22,8 @@ public class ManagerApplication {
 		SpringApplication.run(ManagerApplication.class, args);
 	}
 
+	@Bean
+	public HttpMessageConverter httpMessageConverter() {
+		return new FormHttpMessageConverter();
+	}
 }

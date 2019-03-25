@@ -1,24 +1,19 @@
 package com.heaven.website.shopping.manager.controller;
 
-import okhttp3.*;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.heaven.website.shopping.manager.common.utils.JsonUtils;
+import com.heaven.website.shopping.manager.common.utils.NetworkUtils;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +21,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +33,15 @@ import java.util.Map;
 @RequestMapping("/example")
 public class ExampleController {
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
+
+	private static final String KEY_AUTHORIZATION_ERROR = "error";
+
+	@Autowired
+	private ExampleFeignClient exampleFeignClient;
+
+	@Autowired
+	private DiscoveryClient discoveryClient;
 
 
 	@RequestMapping("/userInfo")
@@ -80,77 +84,120 @@ public class ExampleController {
 		return "index";
 	}
 
+	/**
+	 * 跳转到授权页面
+	 * @return
+	 */
 	@RequestMapping("/authorization")
-	public String toAuthorization() {
+	public String authorization () {
 		return "/example/authorization";
 	}
 
-	@RequestMapping("/authorizationSuccess")
-	@ResponseBody
-	public Object authorizationSuccess(@RequestParam String code) throws IOException {
+	/**
+	 * 应用授权成功。回调给予授权码
+	 * @return
+	 */
+	@RequestMapping("/authorization/code")
+	public Object authorization (HttpServletRequest request, @RequestParam Map<String, Object> modle, ModelMap modelMap) throws IOException {
 
-		log.info("应用授权code:[{}]", code);
-		if(!StringUtils.hasText(code)) {
-			log.error("授权失败。停止后续操作");
-			return "err";
+		log.debug("应用授权回调。method:[{}]", request.getMethod().toUpperCase());
+
+		String code;
+
+		HashMap<String, Object> hashMap = new HashMap<>(modle);
+
+		if(modle.containsKey(KEY_AUTHORIZATION_ERROR)) {
+			log.error("授权异常:[{}]", hashMap);
+		}else {
+			code = (String) hashMap.get("code");
+			log.debug("授权成功。data:[{}]", hashMap);
+			log.debug("尝试获取access token...");
+
+			//获取访问token
+			HashMap<String, Object> params = new HashMap<>();
+			params.put("grant_type", "authorization_code");
+			params.put("code", code);
+			params.put("redirect_uri", "http://localhost:9930/manager/example/authorization/code");
+			HashMap readValue = NetworkUtils.form("http://localhost:9910/authorization/oauth/token", params, HashMap.class);
+
+			log.debug("响应信息:[{}]", JsonUtils.toJson(readValue));
+			//成功数据{"access_token":"5ac293db-204c-43f0-b8eb-1cf12d4a23a2","scope":"test","token_type":"bearer","expires_in":42474}
+			//失败数据{"error_description":"Redirect URI mismatch.","error":"invalid_grant"}
+
+			// 检查获取是否成功
+			if(readValue.containsKey(KEY_AUTHORIZATION_ERROR)) {
+				log.error("access token 获取失败:[{}]", readValue);
+			}else {
+				log.debug("access token 获取成功。data:[{}]", readValue);
+
+				//尝试访问userInfo接口
+				HashMap principal = getPrincipal((String) readValue.get("access_token"));
+
+				log.debug("userInfo:[{}]", principal);
+
+				modelMap.addAttribute("userInfo", principal);
+
+			}
 		}
-
-		log.info("开始获取访问token");
-
-		OkHttpClient okHttpClient = new OkHttpClient
-				.Builder()
-				.authenticator((route, response) -> {
-					String credential = Credentials.basic("client_id", "666");
-					return response.request().newBuilder().header("Authorization", credential).build();
-				})
-				.build();
-
-		FormBody formBody = new FormBody.Builder()
-				.add("grant_type", "authorization_code")
-				.add("scopes", "test")
-				.add("code", code)
-				.build();
-
-		Request request = new Request.Builder().url("http://localhost:9910/authorization/oauth/token")
-				.post(formBody)
-				.build();
-
-		Call call = okHttpClient.newCall(request);
-		Response execute = call.execute();
-		okhttp3.ResponseBody body = execute.body();
-
-		String result = body.string();
-		log.info("access token 获取情况:[{}]", result);
-
-
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		HashMap hashMap = objectMapper.readValue(result, HashMap.class);
-
-		if(!hashMap.containsKey("access_token")) {
-			return "access token 获取失败！";
-		}
-
-		String access_token = (String) hashMap.get("access_token");
-
-		log.info("尝试访问资源");
-
-		HttpUrl httpUrl = HttpUrl.parse("http://localhost:9920/resource/example/userInfo")
-				.newBuilder()
-				.addQueryParameter("access_token", access_token)
-				.build();
-
-		request = new Request.Builder().url(httpUrl)
-				.build();
-
-		call = okHttpClient.newCall(request);
-		execute = call.execute();
-		body = execute.body();
-		result = body.string();
-
-		log.info("资源获取情况:[{}]", result);
-
-		return result;
+		return "/example/authorization";
 	}
+
+	/**
+	 * 检查token
+	 * @param token
+	 * @return
+	 */
+	private HashMap getPrincipal(String token) {
+		return NetworkUtils.get("http://localhost:9910/authorization/oauth/check_token?token=" + token, HashMap.class);
+	}
+
+
+	/**
+	 * 获取注册中心中的已有服务
+	 * <p>http://localhost:9930/manager/example/service-instances/manager</p>
+	 * @param applicationName
+	 * @return
+	 */
+	@RequestMapping("/service-instances/{applicationName}")
+	@ResponseBody
+	public List<ServiceInstance> serviceInstancesByApplicationName(@PathVariable String applicationName) {
+		return this.discoveryClient.getInstances(applicationName);
+	}
+
+
+	/**
+	 * 使用feign访问access token服务
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping("/feign/test")
+	@ResponseBody
+	public Object feignTest(@RequestParam String code) {
+		HashMap<String, Object> params = new HashMap<>(3);
+		params.put("grant_type", "authorization_code");
+		params.put("code", code);
+		params.put("redirect_uri", "http://localhost:9930/manager/example/authorization/code");
+
+		//方法1：使用map
+//		return exampleFeignClient.obtainAccessToken(params);
+		//方法2：使用对象
+		return exampleFeignClient.obtainAccessToken(new AccessTokenRequest("authorization_code", code, "http://localhost:9930/manager/example/authorization/code"));
+
+	}
+
+
+	@Data
+	class AccessTokenRequest {
+		String grant_type;
+		String code;
+		String redirect_uri;
+
+		public AccessTokenRequest(String grant_type, String code, String redirect_uri) {
+			this.grant_type = grant_type;
+			this.code = code;
+			this.redirect_uri = redirect_uri;
+		}
+	}
+
 
 }

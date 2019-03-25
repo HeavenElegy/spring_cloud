@@ -2,17 +2,16 @@ server:
   port: 9920
   servlet:
     context-path: /resource
-logging:
-  level:
-    root: debug
-
 security:
   oauth2:
     client:
-      # 当前资源服务器登陆依凭
       client-id: client_id
       client-secret: 666
     resource:
-      # 配置验证Token的地址
       token-info-uri: http://localhost:9910/authorization/oauth/check_token
-#      user-info-uri: http://localhost:9910/authorization/userInfo
+logging:
+  level:
+    root: debug
+spring:
+  application:
+    name: resuorce
