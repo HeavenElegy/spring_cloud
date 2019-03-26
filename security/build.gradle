@@ -1,6 +1,15 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    }
+    dependencies {
+//        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE'
+    }
+}
 plugins {
     id 'org.springframework.boot' version '2.1.3.RELEASE'
     id 'java'
+    id 'idea'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -8,6 +17,7 @@ apply plugin: 'io.spring.dependency-management'
 group = 'com.heaven.website.shopping'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 configurations {
     compileOnly {
@@ -17,7 +27,6 @@ configurations {
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/central'}
-    maven { url 'https://maven.aliyun.com/repository/gradle-plugin'}
     maven { url 'https://maven.aliyun.com/repository/spring'}
     mavenCentral()
 }
@@ -39,7 +48,6 @@ dependencies {
     
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-//    implementation 'org.springframework.security:spring-security-oauth2-jose'
 }
 
 dependencyManagement {
@@ -48,3 +56,7 @@ dependencyManagement {
     }
 }
 
+//// 编译JAVA文件时采用UTF-8
+//tasks.withType(JavaCompile) {
+//    options.encoding = "UTF-8"
+//}
