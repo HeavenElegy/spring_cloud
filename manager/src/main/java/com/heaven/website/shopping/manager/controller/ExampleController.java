@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -25,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author xiaoxi.li
+ * 示例用接口
+ * @author li.xiaoxi
  * @date 2019/03/21 16:42
- * @description
  */
 @Controller
 @RequestMapping("/example")
@@ -44,6 +43,11 @@ public class ExampleController {
 	private DiscoveryClient discoveryClient;
 
 
+	/**
+	 * 获取用户信息。Spring标准的对象
+	 * @param principal	Spring进行注入
+	 * @return	Principal对象
+	 */
 	@RequestMapping("/userInfo")
 	@ResponseBody
 	public Object userInfo(Principal principal) {
@@ -51,6 +55,11 @@ public class ExampleController {
 		return principal;
 	}
 
+	/**
+	 * 打印一些session信息。并返回SecurityContextHolder.getContext();获取的用户信息
+	 * @param request	Spring进行注入
+	 * @return	Principal对象
+	 */
 	@RequestMapping("/session")
 	@ResponseBody
 	public Object session(HttpServletRequest request) {
@@ -73,12 +82,20 @@ public class ExampleController {
 		return principal;
 	}
 
+	/**
+	 * 返回一个字符串
+	 * @return	字符串
+	 */
 	@RequestMapping("/hasAdmin")
 	@ResponseBody
 	public Object hasAdmin() {
 		return "ok";
 	}
 
+	/**
+	 * 跳转到index页面
+	 * @return	对应页面的相对路径
+	 */
 	@RequestMapping("/index")
 	public String index() {
 		return "index";
@@ -86,7 +103,7 @@ public class ExampleController {
 
 	/**
 	 * 跳转到授权页面
-	 * @return
+	 * @return	对应页面的相对路径
 	 */
 	@RequestMapping("/authorization")
 	public String authorization () {
@@ -95,10 +112,10 @@ public class ExampleController {
 
 	/**
 	 * 应用授权成功。回调给予授权码
-	 * @return
+	 * @return	验证成功后再次返回到授权页面
 	 */
 	@RequestMapping("/authorization/code")
-	public Object authorization (HttpServletRequest request, @RequestParam Map<String, Object> modle, ModelMap modelMap) throws IOException {
+	public Object authorization (HttpServletRequest request, @RequestParam Map<String, Object> modle, ModelMap modelMap) {
 
 		log.debug("应用授权回调。method:[{}]", request.getMethod().toUpperCase());
 
@@ -144,8 +161,8 @@ public class ExampleController {
 
 	/**
 	 * 检查token
-	 * @param token
-	 * @return
+	 * @param token	字符串
+	 * @return	结果信息
 	 */
 	private HashMap getPrincipal(String token) {
 		return NetworkUtils.get("http://localhost:9910/authorization/oauth/check_token?token=" + token, HashMap.class);
@@ -155,8 +172,8 @@ public class ExampleController {
 	/**
 	 * 获取注册中心中的已有服务
 	 * <p>http://localhost:9930/manager/example/service-instances/manager</p>
-	 * @param applicationName
-	 * @return
+	 * @param applicationName	对应服务名（eureka中）
+	 * @return	注册信息集合
 	 */
 	@RequestMapping("/service-instances/{applicationName}")
 	@ResponseBody
@@ -167,8 +184,8 @@ public class ExampleController {
 
 	/**
 	 * 使用feign访问access token服务
-	 * @param code
-	 * @return
+	 * @param code	授权码
+	 * @return	access token以及相关信息
 	 */
 	@RequestMapping("/feign/test")
 	@ResponseBody
@@ -186,6 +203,9 @@ public class ExampleController {
 	}
 
 
+	/**
+	 * 获取AccessToken的请求参数实体类
+	 */
 	@Data
 	class AccessTokenRequest {
 		String grant_type;

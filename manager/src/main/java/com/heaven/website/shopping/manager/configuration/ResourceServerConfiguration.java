@@ -5,7 +5,7 @@
 //import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 //
 ///**
-// * @author xiaoxi.li
+// * @author li.xiaoxi
 // * @date 2019/03/21 18:03
 // * @description
 // */

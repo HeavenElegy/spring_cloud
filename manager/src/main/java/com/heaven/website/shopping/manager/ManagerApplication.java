@@ -10,10 +10,11 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 
 /**
+ * 启动类
  * @author li.xiaoxi
  */
-@EnableFeignClients
-@EnableDiscoveryClient
+@EnableFeignClients	//开启负载均衡
+@EnableDiscoveryClient	// 开启发现服务客户端模式
 @SpringBootApplication
 public class ManagerApplication {
 

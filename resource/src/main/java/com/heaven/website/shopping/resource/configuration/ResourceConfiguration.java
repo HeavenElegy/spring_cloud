@@ -1,18 +1,14 @@
 package com.heaven.website.shopping.resource.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 
 /**
- * @author xiaoxi.li
+ * 资源服务器相关配置
+ * <p>TODO 后期将配置放入这个类中。现在都在yml文件里</p>
+ * @author li.xiaoxi
  * @date 2019/03/22 16:10
- * @description
  */
 @Configuration
 @EnableResourceServer

@@ -1,17 +1,45 @@
+---
+# 基础配置
 server:
+  # 设置运行端口
   port: 9920
   servlet:
+    # 设置项目路径
     context-path: /resource
-security:
-  oauth2:
-    client:
-      client-id: client_id
-      client-secret: 666
-    resource:
-      token-info-uri: http://localhost:9910/authorization/oauth/check_token
-logging:
-  level:
-    root: debug
 spring:
   application:
+    # 项目名
     name: resuorce
+logging:
+  level:
+    # 对全局debug以上等级的日志进行打印
+    root: debug
+...
+
+---
+security:
+  oauth2:
+    # 客户端配置
+    client:
+      # 客户端id
+      client-id: client_id
+      # 客户端密码
+      client-secret: 666
+    # 资源服务器配置
+    resource:
+      # token检查端口
+      token-info-uri: http://localhost:9910/authorization/oauth/check_token
+...
+
+---
+eureka:
+  client:
+    service-url:
+      # 需要动态化
+      defaultZone: http://user:user@localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  #  instance:
+  #    # 设置实例名
+  #    instance-id: ${spring.application.name}:${server.port}
+...

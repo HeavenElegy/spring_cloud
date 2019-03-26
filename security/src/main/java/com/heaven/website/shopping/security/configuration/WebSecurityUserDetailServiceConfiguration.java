@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 用于注入自定义的UserDetailService
- * @author xiaoxi.li
+ * @author li.xiaoxi
  * @date 2019/03/20 10:44
  * @description
  *

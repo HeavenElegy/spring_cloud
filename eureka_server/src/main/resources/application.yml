@@ -1,11 +1,24 @@
+---
+# 基础配置
 server:
+  # 设置运行端口
   port: 8761
+spring:
+  application:
+    # 项目名
+    name: eureka_server
+logging:
+  level:
+    # 对全局debug以上等级的日志进行打印
+    root: debug
+...
+
+---
+# eureka相关配置
 eureka:
   client:
     # 单服务下，停止对eureka注册
     register-with-eureka: false
-    # 单服务下，停止拉去注册信息
+    # 单服务下，停止拉取注册信息
     fetch-registry: false
-spring:
-  application:
-    name: discovery
+...

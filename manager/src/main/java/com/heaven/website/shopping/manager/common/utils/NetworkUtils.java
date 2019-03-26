@@ -7,9 +7,10 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @author xiaoxi.li
+ * 网络工具类
+ * <p>目前添加了HTTP Basic authentication验证信息</p>
+ * @author li.xiaoxi
  * @date 2019/03/25 14:47
- * @description
  */
 public class NetworkUtils {
 
@@ -24,6 +25,12 @@ public class NetworkUtils {
 				.build();
 	}
 
+	/**
+	 * 发送get请求
+	 * @param url	请求路径，不能为空
+	 * @param returnType	返回类型，不能为空
+	 * @return	对应返回类型的对象
+	 */
 	public static <T> T get(String url, Class<T> returnType) {
 		Request request = new Request.Builder()
 				.url(url)
@@ -31,10 +38,19 @@ public class NetworkUtils {
 		return exec(request, returnType);
 	}
 
+	/**
+	 * 发送form表单请求
+	 * @param url	请求路径，不能为空
+	 * @param params	参数 TODO 暂时不支持文件与流相关处理
+	 * @param returnType	返回类型，不能为空
+	 * @return	对应返回类型的对象
+	 */
 	public static <T> T form(String url, Map<String, Object> params, Class<T> returnType) {
 		FormBody.Builder builder = new FormBody.Builder();
-		for (Map.Entry<String, Object> e : params.entrySet()) {
-			builder.add(e.getKey(), e.getValue() == null ? null : e.getValue().toString());
+		if(params != null) {
+			for (Map.Entry<String, Object> e : params.entrySet()) {
+				builder.add(e.getKey(), e.getValue() == null ? null : e.getValue().toString());
+			}
 		}
 		Request request = new Request.Builder()
 				.url(url)
@@ -43,6 +59,9 @@ public class NetworkUtils {
 		return exec(request, returnType);
 	}
 
+	/**
+	 * 执行请求
+	 */
 	private static <T> T exec(Request request, Class<T> returnType) {
 		try {
 			Call call = OK_HTTP_CLIENT.newCall(request);

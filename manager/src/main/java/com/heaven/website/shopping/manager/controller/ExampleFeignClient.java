@@ -18,13 +18,13 @@ import java.util.Map;
 
 /**
  * 指向认证服务的Feign的实例服务
- * @author xiaoxi.li
+ * <p>用于实现负载均衡</p>
+ * @author li.xiaoxi
  * @date 2019/03/25 16:35
- * @description
  */
 @FeignClient(
 		name = "AUTHORIZATION",	// 应用名
-		configuration = ExampleFeignClient.ExampleFeignClientConfiguration.class
+		configuration = ExampleFeignClient.ExampleFeignClientConfiguration.class	// 指定配置
 )
 public interface ExampleFeignClient {
 
@@ -34,6 +34,7 @@ public interface ExampleFeignClient {
 	 * 获取access token
 	 * <p><b>使用Map作为参数</b></p>
 	 * @param params map的value类型必须声明为?。否则会报错。
+	 * @return access token及相关信息
 	 */
 	@RequestMapping(
 			method = RequestMethod.POST,
@@ -44,6 +45,8 @@ public interface ExampleFeignClient {
 	/**
 	 * 获取access token
 	 * <p><b>使用对象作为参数</b></p>
+	 * @param params 请求参数
+	 * @return access token及相关信息
 	 */
 	@RequestMapping(
 			method = RequestMethod.POST,

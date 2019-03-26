@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
 /**
  * 配合{@link HttpSecurity#oauth2Login()} 进行页面OAuth2.0登陆
- * @author xiaoxi.li
+ * @author li.xiaoxi
  * @date 2019/03/20 16:56
  * @description
  */

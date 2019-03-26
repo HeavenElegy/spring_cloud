@@ -1,11 +1,13 @@
+#---
+#security:
+#  oauth2:
+#    resource:
+#      id: manager
+#      token-type: OAuth2
+#      user-info-uri: /userInfo
+#...
 ---
-security:
-  oauth2:
-    resource:
-      id: manager
-      token-type: OAuth2
-      user-info-uri: /userInfo
----
+# 数据库配置
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,6 +16,7 @@ spring:
     password: xpsd@123456789
 ...
 ---
+# thymeleaf配置
 spring:
   thymeleaf:
     cache: false
@@ -28,27 +31,31 @@ spring:
       content-type: text/html
 ...
 ---
-logging:
-  level:
-    root: debug
-...
-
----
+# 基础配置
 server:
+  # 设置运行端口
   port: 9930
   servlet:
+    # 设置项目路径
     context-path: /manager
 spring:
   application:
+    # 项目名
     name: manager
+logging:
+  level:
+    # 对全局debug以上等级的日志进行打印
+    root: debug
 ...
 
 ---
 eureka:
   client:
     service-url:
-      # 注册中心地址
-      default-zone: http://localhost:8761/eureka
+      # 需要动态化
+      defaultZone: http://user:user@localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
 #  instance:
 #    # 设置实例名
 #    instance-id: ${spring.application.name}:${server.port}

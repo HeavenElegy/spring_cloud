@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @author xiaoxi.li
+ * @author li.xiaoxi
  * @date 2019/03/20 15:48
  * @description
  */

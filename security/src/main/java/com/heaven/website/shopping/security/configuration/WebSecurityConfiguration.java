@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 再需要。只需要使用{@link Configuration @Configuration}注解将此类注入Spring容器即可即可</p>
  * <p>这里还是使用了{@link EnableWebSecurity @EnableWebSecurity}注解。用于开启Security的Debug模式</p>
  *
- * @author xiaoxi.li
+ * @author li.xiaoxi
  * @date 2019/03/20 10:44
  * @description
  */
